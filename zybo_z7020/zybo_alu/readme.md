@@ -1,4 +1,4 @@
-# ⚙️ Zybo Z7-20 AXI-ALU with PetaLinux (Bare-metal Memory Access)
+#  Zybo Z7-20 AXI-ALU with PetaLinux (Bare-metal Memory Access)
 
 이 프로젝트는 **Zybo Z7-20 (Zynq-7020)** 보드에서 Vivado로 생성한 **AXI-Lite 기반 ALU IP**를  
 **PetaLinux 사용자 공간(/dev/mem)** 에서 직접 접근하여 테스트하는 예제입니다.  
@@ -21,7 +21,7 @@ zybo_alu_project/
 
 ---
 
-## 🧩 1. Vivado Design 개요
+##  1. Vivado Design 개요
 
 ### 🔹 Block Diagram 구성
 - **Zynq Processing System (PS7)**  
@@ -32,35 +32,9 @@ zybo_alu_project/
 - **Address Editor**  
   - ALU IP Base Address: `0x43C0_0000`
   - Range: 64 KB
+<img width="1355" height="565" alt="image" src="https://github.com/user-attachments/assets/5ae11f9b-8abe-4bab-b3d0-ffa6c564569f" />
 
-### 🔹 ALU 모듈 (alu.v)
-```verilog
-module ALU(
-    input  wire [7:0] a,
-    input  wire [7:0] b,
-    input  wire [2:0] opcode,
-    input  wire       ena,
-    output reg  [15:0] result
-);
-    always @(*) begin
-        if (ena) begin
-            case (opcode)
-                3'b000: result = a + b;
-                3'b001: result = a - b;
-                3'b010: result = a * b;
-                3'b011: result = (b != 0) ? a / b : 16'hFFFF;
-                3'b100: result = a & b;
-                3'b101: result = a | b;
-                3'b110: result = a ^ b;
-                3'b111: result = ~a;
-                default: result = 16'h0000;
-            endcase
-        end else begin
-            result = 16'h0000;
-        end
-    end
-endmodule
-```
+
 
 ### 🔹 AXI Slave 수정 포인트
 `alu_v1_0_S00_AXI.v`의 주요 변경:
@@ -70,7 +44,7 @@ endmodule
 
 ---
 
-## 💻 2. Vivado → Bitstream → PetaLinux Flow
+##  2. Vivado → Bitstream → PetaLinux Flow
 
 1. Vivado에서 Block Design → HDL Wrapper 생성  
 2. Bitstream 생성 (`Generate Bitstream`)  
@@ -123,13 +97,13 @@ endmodule
 
 ---
 
-## 🧠 3. 레지스터 맵
+##  3. 레지스터 맵
 
 | 주소(Offset) | 이름 | 설명 | 접근 |
 |---------------|-------|------|-------|
 | 0x00 | **REG0** | `{a[31:24], b[23:16], …, ena[3], opcode[2:0]}` | RW |
 | 0x04 | **REG1** | `{16'h0, result[15:0]}` (ALU 결과) | **RO** |
-| 0x08 | **REG2** | Reserved | RW |
+| 0x08 | **REG2** | Reserved | RW | 
 | 0x0C | **REG3** | Reserved | RW |
 
 > ⚠️ REG1은 AXI 쓰기 금지. ALU enable(ena=1)일 때만 결과가 래치됩니다.
