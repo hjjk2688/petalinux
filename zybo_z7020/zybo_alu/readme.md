@@ -97,8 +97,8 @@ zybo_alu_project/
 
 ---
 
-##  3. 레지스터 맵
-
+##  3. 레지스터 맵 & ALU opcode
+### 레지스터 맵
 | 주소(Offset) | 이름 | 설명 | 접근 |
 |---------------|-------|------|-------|
 | 0x00 | **REG0** | `{a[31:24], b[23:16], …, ena[3], opcode[2:0]}` | RW |
@@ -107,3 +107,97 @@ zybo_alu_project/
 | 0x0C | **REG3** | Reserved | RW |
 
 > ⚠️ REG1은 AXI 쓰기 금지. ALU enable(ena=1)일 때만 결과가 래치됩니다.
+> "래치(latch)된다"는 것은 특정 조건이 만족되었을 때의 결과값을 '찰칵'하고 사진 찍듯이 붙잡아서 저장하고, 그 값을 계속 유지하는 것
+
+### ALU opcode
+
+| opcode | 연산 | 설명 |
+|--------:|------|------|
+| 0 | ADD | a + b |
+| 1 | SUB | a - b |
+| 2 | MUL | a × b |
+| 3 | DIV | a ÷ b |
+| 4 | AND | a & b |
+| 5 | OR  | a \| b |
+| 6 | XOR | a ^ b |
+| 7 | NOT | ~a |
+
+---
+
+##  4. PetaLinux 테스트 코드
+
+`alu_test.c` — `/dev/mem` 접근 예제
+
+```bash
+# 컴파일 (PC 에서)
+arm-linux-gnueabihf-gcc -o alu_test alu_test.c
+
+# 컴파일 (보드 안에서)
+gcc -O2 -Wall -o alu_test alu_test.c
+```
+
+## 5. ALU IP Code
+```
+	assign slv_reg_wren = axi_wready && S_AXI_WVALID && axi_awready && S_AXI_AWVALID;   // 옆에 내가가 다 활성화 돼야 쓰기가능
+
+	always @( posedge S_AXI_ACLK )
+	begin
+	  if ( S_AXI_ARESETN == 1'b0 )
+	    begin
+	      slv_reg0 <= 0;
+	      slv_reg1 <= 0;
+	      slv_reg2 <= 0;
+	      slv_reg3 <= 0;
+	    end 
+	  else begin
+	    if (slv_reg_wren)
+	      begin
+	        case ( axi_awaddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] )
+	          2'h0:
+	            for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
+	              if ( S_AXI_WSTRB[byte_index] == 1 ) begin
+	                // Respective byte enables are asserted as per write strobes 
+	                // Slave register 0
+	                slv_reg0[(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
+	              end  
+	          2'h1: begin
+                // slave(alu) reg 2번은 result 값을 저장하는곳 / result 된 결과를 read 하는곳이니까  write는 막아둔다.
+              end
+
+	          2'h2: begin
+	             for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
+	               if ( S_AXI_WSTRB[byte_index] == 1 ) begin
+	            	 Respective byte enables are asserted as per write strobes 
+	                 Slave register 2
+	                 slv_reg2[(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
+	               end
+             
+              end
+
+	          2'h3:
+	            for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
+	              if ( S_AXI_WSTRB[byte_index] == 1 ) begin
+	                 Respective byte enables are asserted as per write strobes 
+	                 Slave register 3
+	                slv_reg3[(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
+	              end  
+	          default : begin
+	                    //   slv_reg0 <= slv_reg0;
+	                    //   slv_reg1 <= slv_reg1;
+	                    //   slv_reg2 <= slv_reg2;
+	                    //   slv_reg3 <= slv_reg3; 
+                        //안함 왜 안함 ?  no-op
+	                    end
+	        endcase
+            if (slv_reg0[3]) begin  // slv_reg0 이 input값이 저장된곳이고 거기야 slv_reg[3]이 input enable 값임 alu module 코드짤때 enable 1일떄 실행되게해서 check
+                 slv_reg1 <= {16'h0000, alu_result}; //처음 인풋줄떄 확인하고 결과에 값적어놓음 
+            end
+
+	      end
+	  end
+	end    
+```
+- slv_reg0 : input 들어오는곳으로 수정 X
+- slv_reg1 : alu 계산된 결과 result 가 read 되는곳으로 write가 되는걸 방지 코드수정
+- enable == 1 이면 slv_reg1 에 result 값 update
+---
