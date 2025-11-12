@@ -326,4 +326,28 @@ gcc -O2 -Wall -o alu_test alu_test.c
     set_property -dict { PACKAGE_PIN G14   IOSTANDARD LVCMOS33 } [get_ports { led[2] }]; #IO_0_35 Sch=led[2]
     set_property -dict { PACKAGE_PIN D18   IOSTANDARD LVCMOS33 } [get_ports { led[3] }]; #IO_L3N_T0_DQS_AD1N_35 Sch=led[3]
     ```
+======
+## 7. 실행결과
+#### 1. ALU
+```
+input 
+	- a = 0x32
+	- b = 0x0A
+	- enable = 1
+	- opcode = 011
+	=> eable + opcode : 하위 4bit
+
+root@myproject:~# devmem 0x43C00000 32 0x320A000A // reg0 
+root@myproject:~# devmem 0x43C00004 //reg1 접근 
+
+# 예상 출력 결과
+0x000001F4 // 10진수 0x32 = 50 / 0x0A = 10  => MUX = 0x1FA = 500
+```
+실행결과
+
+<img width="503" height="53" alt="image" src="https://github.com/user-attachments/assets/ee548ba8-cdc9-4518-8b28-263956ec7609" />
+
+### 2.Switch Read
+* 스위치 상태를 단순히 읽어 들임
+
 
