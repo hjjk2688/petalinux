@@ -220,7 +220,7 @@
 	// These registers are cleared when reset (active low) is applied.
 	// Slave register write enable is asserted when valid address and data are available
 	// and the slave is ready to accept the write address and write data.
-	assign slv_reg_wren = axi_wready && S_AXI_WVALID && axi_awready && S_AXI_AWVALID;   // 옆에 내가가 다 활성화 돼야 쓰기가능
+		assign slv_reg_wren = axi_wready && S_AXI_WVALID && axi_awready && S_AXI_AWVALID;   // wready(write 준비), awredy(응답확인)- slave , WVALID , AWVALID - master
 
 	always @( posedge S_AXI_ACLK )
 	begin
