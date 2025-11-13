@@ -351,5 +351,11 @@ root@myproject:~# devmem 0x43C00004 //reg1 접근
 
 ### 2.Switch Read
 * 스위치 상태를 단순히 읽어 들임
+  
+  <img width="604" height="814" alt="image" src="https://github.com/user-attachments/assets/016ef907-e96b-41b6-bfb0-43c14359aada" />
+
+  실행결과
+  
+
 
 
