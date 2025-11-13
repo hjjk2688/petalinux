@@ -380,6 +380,6 @@ root@myproject:~# devmem 0x43C0000C 32 0x0000000f   // LED 전체 ON
 root@myproject:~# devmem 0x43C0000C 32 0x00000000   // LED 전체 OFF
 ```
 
-마지막 16진수 4bit를 이용해 led 4개 제어어
+* 마지막 16진수 4bit를 이용해 led 4개 제어
 
 
