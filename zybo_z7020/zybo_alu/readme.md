@@ -352,10 +352,34 @@ root@myproject:~# devmem 0x43C00004 //reg1 접근
 ### 2.Switch Read
 * 스위치 상태를 단순히 읽어 들임
   
-  <img width="604" height="814" alt="image" src="https://github.com/user-attachments/assets/016ef907-e96b-41b6-bfb0-43c14359aada" />
+  <img width="300" height="500" alt="image" src="https://github.com/user-attachments/assets/016ef907-e96b-41b6-bfb0-43c14359aada" />
 
-  실행결과
+* 실행결과
+
+<img width="367" height="39" alt="image" src="https://github.com/user-attachments/assets/8ed4da8c-ce70-4f0e-ae86-066ddd51aaeb" />
+
+0x0000000D => 2진수 1011 => 스위치 on = 1 / off = 0
+### 3.lED
+* mem 접근으로 LED ON/OFF
+
+* LED ON
   
+<img width="500" height="350" alt="image" src="https://github.com/user-attachments/assets/f7923e23-8624-4c02-95d0-332e980ee9b7" />
 
+* LED OFF
+
+<img width="500" height="350" alt="image" src="https://github.com/user-attachments/assets/05822316-51cc-437e-be8f-ce6f0783bac4" />
+
+
+* 실행결과
+
+<img width="501" height="43" alt="image" src="https://github.com/user-attachments/assets/79617312-467d-46eb-9b78-adddbb24f312" />
+
+```
+root@myproject:~# devmem 0x43C0000C 32 0x0000000f   // LED 전체 ON
+root@myproject:~# devmem 0x43C0000C 32 0x00000000   // LED 전체 OFF
+```
+
+마지막 16진수 4bit를 이용해 led 4개 제어어
 
 
