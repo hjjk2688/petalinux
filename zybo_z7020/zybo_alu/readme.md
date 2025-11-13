@@ -138,7 +138,9 @@ gcc -O2 -Wall -o alu_test alu_test.c
 
 ## 5. ALU IP Code
 ```Verilog
-	assign slv_reg_wren = axi_wready && S_AXI_WVALID && axi_awready && S_AXI_AWVALID;   // 옆에 내가가 다 활성화 돼야 쓰기가능
+	// slave = wready,awready / master = WVALID , AWVALID
+	// 네개가 다 활성화 돼야 write 가능
+	assign slv_reg_wren = axi_wready && S_AXI_WVALID && axi_awready && S_AXI_AWVALID;   
 
 	always @( posedge S_AXI_ACLK )
 	begin
