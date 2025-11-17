@@ -23,7 +23,7 @@ echo "=== GPIO Test ==="
 echo 913 > /sys/class/gpio/export 2>/dev/null
 echo out > /sys/class/gpio/gpio913/direction
 
-# 스위치 초기화
+# 버튼 초기화
 echo 956 > /sys/class/gpio/export 2>/dev/null
 echo in > /sys/class/gpio/gpio956/direction
 echo 957 > /sys/class/gpio/export 2>/dev/null
@@ -46,7 +46,7 @@ for i in 1 2 3 4 5; do
     sleep 0.5
 done
 
-# 스위치 읽기
+# 버튼 읽기
 echo "Press switches (Ctrl+C to exit)..."
 while true; do
     SW0=$(cat /sys/class/gpio/gpio956/value)
@@ -171,7 +171,7 @@ int main() {
         int sw0 = gpio_read(GPIO_SW0);
         int sw1 = gpio_read(GPIO_SW1);
         
-        if(sw0 == 0) {  // 스위치 눌림 (일반적으로 active low)
+        if(sw0 == 0) {  // 버튼 눌림 (일반적으로 active low)
             gpio_write(GPIO_LED, 1);
             printf("SW0 pressed - LED ON\n");
         } else if(sw1 == 0) {
@@ -294,3 +294,6 @@ arm-linux-gnueabihf-gcc -o gpio_test gpio_test.c
 # 보드에 복사 후
 ./gpio_test
 ```
+
+### 문제점
+* PS 부분 LED는 제어 가능하나 BTN5 , BTN4는 제어 불가능
