@@ -3,6 +3,12 @@
 
 ## Zybo MIO GPIO Test
 
+### ZYNQ7 Processing System (5.5) Default setting
+
+<img width="859" height="522" alt="image" src="https://github.com/user-attachments/assets/b402dae0-cb5e-437b-ab3a-40e94fa91697" />
+
+<img width="436" height="178" alt="image" src="https://github.com/user-attachments/assets/cc706bdd-dc1c-4bef-b190-bd993d900976" />
+
 ```
 # /home/root/test_gpio.sh
 #!/bin/sh
