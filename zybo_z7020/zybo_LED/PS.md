@@ -23,6 +23,14 @@ echo in > /sys/class/gpio/gpio956/direction
 echo 957 > /sys/class/gpio/export 2>/dev/null
 echo in > /sys/class/gpio/gpio957/direction
 
+```
+
+<img width="573" height="426" alt="image" src="https://github.com/user-attachments/assets/7022e479-759f-4721-82ae-faa12481025f" />
+
+<img width="651" height="83" alt="image" src="https://github.com/user-attachments/assets/902878de-94dc-47c4-9934-cf8a0fc5d533" />
+
+
+```
 # LED 깜빡임 테스트
 echo "LED Blinking Test..."
 for i in 1 2 3 4 5; do
