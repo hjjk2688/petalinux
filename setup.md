@@ -148,10 +148,14 @@ set board_part "digilentinc.com:zybo-z7-20:part0:1.1"
 * File > Export > Xsa 생성(include bit stream 선택)
 
 ## 준비할 파일
+
+<img width="615" height="108" alt="image" src="https://github.com/user-attachments/assets/909368f4-dfe8-4bec-ab3e-19a4a19686eb" />
+
    * petalinux-v2022.2-10141622-installer.run
    * ubuntu-22.04.5-desktop-amd64.iso
    * VirtualBox-7.2.4-170995-Win.exe
    * balenaEtcher-2.1.2.Setup.exe
+   * petalinux 와 vivado 같은 버전 사용 해야됨
 
 ## 1. VirtualBox Ubuntu 22.04.5 설치
 
