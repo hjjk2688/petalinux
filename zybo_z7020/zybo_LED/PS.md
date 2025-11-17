@@ -1,5 +1,5 @@
 
-# Digilent Zybo Z7-20 PetaLinux : PS/PL GPIO
+# Digilent Zybo Z7-20 PetaLinux : PS GPIO
 
 ## Zybo MIO GPIO Test
 
