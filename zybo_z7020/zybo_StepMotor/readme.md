@@ -59,7 +59,7 @@ Number of Registers: 4 (최소한 필요)
 ```
 
 추천 레지스터 맵:
-* Offset 0x00: Control Register (run, dir, half_full, enable)
+* Offset 0x00: Control Register (half_full, motor_dir, motor_run, S_AXI_ARESETN)
 * Offset 0x04: Status Register (현재 step_idx, coils 상태)
 * Offset 0x08: Speed Register (STEPS_PER_SEC 설정)
 * Offset 0x0C: Reserved
@@ -205,6 +205,21 @@ set_property -dict { PACKAGE_PIN H15   IOSTANDARD LVCMOS33 } [get_ports { coils[
 
 * Board 연결
   
+<img width="545" height="534" alt="image" src="https://github.com/user-attachments/assets/30e1a8ef-c76e-4ddf-a348-61e56c944485" />
+
+- □ 표시가 있는 곳 부터 1번
+
+```csh
+
+# devmem 명령어를 이용하여 Stepper Motor 제어
+* Offset 0x00: Control Register (half_full, motor_dir, motor_run, S_AXI_ARESETN) /half_full = 1 (half mode ) half_full = 0 (full mode) /dir 1=CW(시계방향), 0=CCW (시계반대방향) 
+* Offset 0x04: Status Register (현재 step_idx, coils 상태)
+* Offset 0x08: Speed Register (STEPS_PER_SEC 설정)
+* Offset 0x0C: Reserved
+
+devmem 0x43C00000 32 0x0000000F => 1111 => half mode / 시계방향 / run / reset X  
+devmem 0x43C00000 32 0x00000003 => 0011 => full mode / 반시계방향 / run / reset X 
+```
 
 
 
